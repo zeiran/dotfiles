@@ -1,4 +1,4 @@
----- plugins ----
+---=== plugins ===---
 
 Plug = vim.fn['plug#']
 vim.call('plug#begin')
@@ -7,7 +7,7 @@ vim.call('plug#begin')
     Plug('rktjmp/lush.nvim')
     Plug('kvrohit/substrata.nvim')
     Plug('comfysage/evergarden')
-    Plug('zenbones-theme/zenbones.nvim')
+    Plug('rafamadriz/neon')
     --interface
     Plug('romgrk/barbar.nvim')
     Plug('nvim-lualine/lualine.nvim')
@@ -32,7 +32,7 @@ vim.call('plug#end')
 package.loaded['launchpad'] = nil
 require('launchpad').setup()
 
----- plugins.interface ----
+---=== plugins.interface ===---
 
 vim.cmd([[
     nnoremap <silent>    <A-,> <Cmd>BufferPrevious<CR>
@@ -55,8 +55,11 @@ vim.cmd([[
     nnoremap <silent> <A-/>    <Cmd>BufferPick<CR>
     nnoremap <silent> <A-s-/>    <Cmd>BufferPickDelete<CR>
 ]])
+local barbar = require'barbar'
+barbar.setup()
 
-require('lualine').setup({
+local lualine = require('lualine')
+local lualine_cfg = {
     sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'diagnostics' },
@@ -65,9 +68,10 @@ require('lualine').setup({
         lualine_y = { 'location', 'progress' },
         lualine_z = { 'getcwd', {'g:my_project', color={fg='black', gui='bold'}} }
     }
-})
+}
+lualine.setup(lualine_cfg)
 
----- plugins.lsp ---
+---=== plugins.lsp ===---
 
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -101,16 +105,27 @@ lspconfig.clangd.setup({
     capabilities = blink.get_lsp_capabilities({}, true),
     cmd = { 'clangd', '--completion-style=detailed', '--background-index' },
 })
+lspconfig.cmake.setup{}
 
----- plugins.filesystem ----
+---=== plugins.filesystem ===---
+
+local function oil_copy_path_to_register()
+    local oil = require('oil')
+    local path = oil.get_current_dir()..oil.get_cursor_entry().name
+    vim.fn.setreg(vim.v.register, path)
+    vim.notify('Copied to "'..vim.v.register..': '..path)
+end
 
 require('oil').setup({
     columns = { "icon" },
     delete_to_trash = true,
-    keymaps = {["<Esc>"] = "actions.close"}
+    keymaps = {
+        ["<Esc>"] = "actions.close",
+        ["<C-c>"] = {oil_copy_path_to_register, desc='copy path to register'}
+    }
 })
 
----- graphics ----
+---=== graphics ===---
 
 if vim.g.neovide then
     vim.g.neovide_padding_top = 10
@@ -119,13 +134,15 @@ if vim.g.neovide then
     vim.g.neovide_fullscreen = true
 end
 
-vim.cmd('colorscheme substrata')
 vim.o.guifont = 'Agave Nerd Font:h14'
 vim.o.relativenumber = true
 vim.o.number = true
 vim.o.hlsearch = false
 
----- behaviour ----
+local colorschemes = require'colorschemes'
+colorschemes.setup(lualine, lualine_cfg, barbar)
+
+---=== behaviour ===---
 
 vim.o.tabstop = 8
 vim.o.shiftwidth = 4
@@ -133,33 +150,30 @@ vim.o.smarttab = true
 vim.o.expandtab = true
 vim.o.formatoptions = 'jql' -- do not autoinsert comment leader at newline
 
----- mappings ----
+---=== mappings ===---
+
+vim.cmd('imap <Ins> <Esc>')
+vim.cmd('tmap <Esc> <C-\\><C-n>')
 
 vim.keymap.set('n', '<F1>', require("oil").open_float) -- open dir with current file
 vim.keymap.set('n', '<S-F1>', ":Alpha<CR>")
 
+-- <F5> was set by nvim-launchpad
 vim.cmd('map <F6> :lua vim.diagnostic.setqflist()<CR>')
 
 vim.cmd('map <F8> :wall<CR>:source %<CR>')             -- source current file to Vim
 vim.cmd('map <S-F8> :wall<CR>:!powershell -command "Start-Process neovide.exe %"<CR><CR>:qall<CR>')         -- restart with current file
 vim.cmd('map <A-F8> "lyy:lua <C-r>l<CR>')
 
-vim.cmd('imap <Ins> <Esc>')
+vim.keymap.set('n', '<F12>', colorschemes.switch)
 
-local scheme_index = 0
-vim.keymap.set('n', '<F12>', function ()
-    local schemes = {'substrata', 'desert', 'neobones', 'evergarden'}
-    scheme_index = (scheme_index + 1 > #schemes) and 1 or scheme_index + 1
-    local scheme = schemes[scheme_index]
-    vim.cmd.colorscheme(scheme)
-    vim.notify('colorscheme '..scheme)
-end)
+---=== greeter ===---
 
---- globals ---
+if not vim.g.my_project then require'greeter'.show() end
+
+---=== globals ===---
 
 vim.g.my_project = '?'
 
---- greeter ---
-
-require'greeter'.show()
+Z_cache = require'cache'
 
