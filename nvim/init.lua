@@ -8,6 +8,9 @@ vim.call('plug#begin')
     Plug('kvrohit/substrata.nvim')
     Plug('comfysage/evergarden')
     Plug('rafamadriz/neon')
+    Plug('aktersnurra/no-clown-fiesta.nvim')
+    Plug('sainnhe/gruvbox-material')
+    Plug('neanias/everforest-nvim')
     --interface
     Plug('romgrk/barbar.nvim')
     Plug('nvim-lualine/lualine.nvim')
@@ -15,9 +18,6 @@ vim.call('plug#begin')
     Plug('stevearc/oil.nvim')
     --coding
     Plug('preservim/nerdcommenter')
-    --building
-    --Plug('nvim-lua/plenary.nvim')
-    --Plug('Civitasv/cmake-tools.nvim')
     -- LSP
     Plug('williamboman/mason.nvim')
     Plug('williamboman/mason-lspconfig.nvim')
@@ -175,5 +175,6 @@ if not vim.g.my_project then require'greeter'.show() end
 
 vim.g.my_project = '?'
 
-Z_cache = require'cache'
+Z = {}
+Z.cache = require'cache'
 
