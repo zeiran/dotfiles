@@ -27,6 +27,7 @@ vim.call('plug#begin')
     Plug('goolord/alpha-nvim')
     --dev
     Plug(vim.env['NVIM_PLUGIN_DEV']..'\\nvim-launchpad')
+    Plug(vim.env['NVIM_PLUGIN_DEV']..'\\nvim-windbg')
 vim.call('plug#end')
 
 package.loaded['launchpad'] = nil
@@ -125,6 +126,17 @@ require('oil').setup({
     }
 })
 
+---=== plugins.dev ===---
+
+require'windbg'.setup({
+    cdb_path = '$SYSTEMDRIVE\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x64\\cdb.exe',
+    windbg_path = '$LOCALAPPDATA\\Microsoft\\WindowsApps\\WinDbgX.exe',
+    devmode = true,
+    windbg_log_file = vim.fn.tempname()..'.windbg_out.log',
+    plugin_log_file = vim.fn.tempname()..'.windbg_plg.log',
+})
+
+
 ---=== graphics ===---
 
 if vim.g.neovide then
@@ -164,6 +176,7 @@ vim.cmd('map <F6> :lua vim.diagnostic.setqflist()<CR>')
 vim.cmd('map <F8> :wall<CR>:source %<CR>')             -- source current file to Vim
 vim.cmd('map <S-F8> :wall<CR>:!powershell -command "Start-Process neovide.exe %"<CR><CR>:qall<CR>')         -- restart with current file
 vim.cmd('map <A-F8> "lyy:lua <C-r>l<CR>')
+-- <C-F8> for project-specific re-soure
 
 vim.keymap.set('n', '<F12>', colorschemes.switch)
 
