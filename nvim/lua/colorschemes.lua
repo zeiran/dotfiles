@@ -1,15 +1,12 @@
 local M = {}
 
 local schemes = {}
-local cache = require'cache'
-local scheme_index = 1
 
-local barbar = nil
 local lualine = nil
 local lualine_cfg = {}
 
 local function set()
-    local scheme = schemes[scheme_index]
+    local scheme = schemes[vim.g.MY_COLOR_INDEX]
     vim.o.background='dark'
     if type(scheme) == 'table' then
         scheme[2]()
@@ -17,13 +14,13 @@ local function set()
     end
     local c = string.gsub(scheme, '/.*', '')
     vim.cmd.colorscheme(c)
+    assert(lualine).setup(lualine_cfg)
     return scheme
 end
 
-function M.setup(lualine_, lualine_cfg_, barbar_)
+function M.setup(lualine_, lualine_cfg_)
     lualine = lualine_
     lualine_cfg = lualine_cfg_
-    barbar = barbar_
     schemes = {
         {'neon', function() lualine_cfg['theme'] = "neon"; vim.g.neon_style = "default" end},
         {'neon/dark', function() lualine_cfg['theme'] = "neon"; vim.g.neon_style = "dark" end},
@@ -37,20 +34,18 @@ function M.setup(lualine_, lualine_cfg_, barbar_)
         --{'everforest/hard', function() vim.g.everforest_background='hard' end},
         {'everforest/light', function() vim.o.background='light' end},
     }
-    scheme_index = cache.get('scheme_index') or 1
-    if scheme_index + 1 > #schemes then
-        scheme_index = 1
-        cache.set('scheme_index', scheme_index)
+    vim.notify('index '..vim.inspect(vim.g.MY_COLOR_INDEX))
+    vim.g.MY_COLOR_INDEX = vim.g.MY_COLOR_INDEX or 1
+    if vim.g.MY_COLOR_INDEX + 1 > #schemes then
+        vim.g.MY_COLOR_INDEX = 1
     end
-    set()
+    vim.api.nvim_create_autocmd({"VimEnter"}, {callback = set})
 end
 
 function M.switch()
-    scheme_index = (scheme_index + 1 > #schemes) and 1 or scheme_index + 1
+    vim.g.MY_COLOR_INDEX = (vim.g.MY_COLOR_INDEX + 1 > #schemes) and 1 or vim.g.MY_COLOR_INDEX + 1
     vim.notify('colorscheme '..set())
-    assert(barbar).setup()
-    assert(lualine).setup(lualine_cfg)
-    cache.set('scheme_index', scheme_index)
+    --assert(barbar).setup()
 end
 
 return M
