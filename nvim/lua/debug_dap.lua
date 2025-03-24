@@ -16,11 +16,12 @@ vim.keymap.set("n", "<S-F12>", DapUi.toggle, { desc = "[debug] toggle UI (all)" 
 vim.keymap.set({ "n", "v" }, "<Leader>de", DapUi.eval, { desc = "[debug] eval at cursor / selection" })
 vim.keymap.set({ "n", "v" }, "<F11>", DapUi.eval, { desc = "[debug] eval at cursor / selection" })
 
-require("dap").adapters["pwa-chrome"] = { ---@diagnostic disable-line: missing-fields
+Dap.adapters["pwa-chrome"] = { ---@diagnostic disable-line: missing-fields
+	type = "server",
 	host = "localhost",
 	port = 34343,
 }
-require("dap").adapters["pwa-node"] = { ---@diagnostic disable-line: missing-fields
+Dap.adapters["pwa-node"] = { ---@diagnostic disable-line: missing-fields
 	type = "server",
 	host = "localhost",
 	port = 34343,
@@ -33,7 +34,7 @@ require("dap").adapters["pwa-node"] = { ---@diagnostic disable-line: missing-fie
 	--args = {"C:\\Users\\RobotComp.ru\\AppData\\Local\\nvim\\js-debug\\src\\dapDebugServer.js", "${port}"},
 	--}
 }
-require("dapui").setup() -- all configs are in launch.json per-project
+
 DapUi.setup({ ---@diagnostic disable-line: missing-fields
 	layouts = {
 		{

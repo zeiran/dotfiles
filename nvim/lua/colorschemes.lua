@@ -5,6 +5,8 @@ local schemes = {}
 local lualine = nil
 local lualine_cfg = {}
 
+require("everforest").setup({background = "hard"})
+
 local function set()
     local scheme = schemes[vim.g.MY_COLOR_INDEX]
     vim.o.background='dark'

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime": {
+    "version": "LuaJIT",
+    "pathStrict": "true",
+  },
+  "workspace": {
+    "library": [
+      "${env:VIMRUNTIME}",
+      "${3rd}/luv/library",
+      "${env:LOCALAPPDATA}/nvim-data/plugged/nvim-dap",
+      "${env:LOCALAPPDATA}/nvim-data/plugged/nvim-dap-ui",
+    ],
+    "ignoreDir": [],
+    "checkThirdParty": "Disable"
+  }
+}

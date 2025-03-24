@@ -12,7 +12,7 @@ Plug("aktersnurra/no-clown-fiesta.nvim")
 Plug("sainnhe/gruvbox-material")
 Plug("neanias/everforest-nvim")
 --interface
-Plug("romgrk/barbar.nvim")
+--Plug("romgrk/barbar.nvim")
 Plug("nvim-lualine/lualine.nvim")
 --filesystem
 Plug("stevearc/oil.nvim")
@@ -40,6 +40,7 @@ Plug("goolord/alpha-nvim")
 --dev
 Plug(vim.env["NVIM_PLUGIN_DEV"] .. "\\nvim-launchpad")
 --    Plug(vim.env['NVIM_PLUGIN_DEV']..'\\nvim-windbg')
+Plug("francescarpi/buffon.nvim")
 vim.call("plug#end")
 
 local function notify_on_error(what, func)
@@ -56,35 +57,44 @@ end)
 
 ---=== plugins.interface ===---
 
-local barbar = nil
-notify_on_error("barbar", function()
-	barbar = require("barbar")
-	barbar.setup({
-		icons = { button = false, buffer_index = true },
-	})
-	vim.cmd([[
-        nnoremap <silent>    <A-,> <Cmd>BufferPrevious<CR>
-        nnoremap <silent>    <A-.> <Cmd>BufferNext<CR>
-        nnoremap <silent>    <A-<> <Cmd>BufferMovePrevious<CR>
-        nnoremap <silent>    <A->> <Cmd>BufferMoveNext<CR>
-        nnoremap <silent>    <A-1> <Cmd>BufferGoto 1<CR>
-        nnoremap <silent>    <A-2> <Cmd>BufferGoto 2<CR>
-        nnoremap <silent>    <A-3> <Cmd>BufferGoto 3<CR>
-        nnoremap <silent>    <A-4> <Cmd>BufferGoto 4<CR>
-        nnoremap <silent>    <A-5> <Cmd>BufferGoto 5<CR>
-        nnoremap <silent>    <A-6> <Cmd>BufferGoto 6<CR>
-        nnoremap <silent>    <A-7> <Cmd>BufferGoto 7<CR>
-        nnoremap <silent>    <A-8> <Cmd>BufferGoto 8<CR>
-        nnoremap <silent>    <A-9> <Cmd>BufferGoto 9<CR>
-        nnoremap <silent>    <A-0> <Cmd>BufferLast<CR>
-        nnoremap <silent>    <A-p> <Cmd>BufferPin<CR>
-        nnoremap <silent>    <A-c> <Cmd>BufferClose<CR>
-        nnoremap <silent>    <A-s-c> <Cmd>BufferRestore<CR>
-        nnoremap <silent> <A-/>    <Cmd>BufferPick<CR>
-        nnoremap <silent> <A-s-/>    <Cmd>BufferPickDelete<CR>
-    ]])
-	return barbar
+notify_on_error("buf-mru", function()
+	require("buffer_mru")
 end)
+
+--local barbar = nil
+--notify_on_error("barbar", function()
+--barbar = require("barbar")
+--barbar.setup({
+--icons = {
+--buffer_index = true,
+--filetype = { enabled = false },
+--button = false,
+--pinned = { button = "", filename = true },
+--},
+--})
+--vim.cmd([[
+--nnoremap <silent>    <A-,> <Cmd>BufferPrevious<CR>
+--nnoremap <silent>    <A-.> <Cmd>BufferNext<CR>
+--nnoremap <silent>    <A-<> <Cmd>BufferMovePrevious<CR>
+--nnoremap <silent>    <A->> <Cmd>BufferMoveNext<CR>
+--nnoremap <silent>    <A-1> <Cmd>BufferGoto 1<CR>
+--nnoremap <silent>    <A-2> <Cmd>BufferGoto 2<CR>
+--nnoremap <silent>    <A-3> <Cmd>BufferGoto 3<CR>
+--nnoremap <silent>    <A-4> <Cmd>BufferGoto 4<CR>
+--nnoremap <silent>    <A-5> <Cmd>BufferGoto 5<CR>
+--nnoremap <silent>    <A-6> <Cmd>BufferGoto 6<CR>
+--nnoremap <silent>    <A-7> <Cmd>BufferGoto 7<CR>
+--nnoremap <silent>    <A-8> <Cmd>BufferGoto 8<CR>
+--nnoremap <silent>    <A-9> <Cmd>BufferGoto 9<CR>
+--nnoremap <silent>    <A-0> <Cmd>BufferLast<CR>
+--nnoremap <silent>    <A-p> <Cmd>BufferPin<CR>
+--nnoremap <silent>    <A-c> <Cmd>BufferClose<CR>
+--nnoremap <silent>    <A-s-c> <Cmd>BufferRestore<CR>
+--nnoremap <silent> <A-/>    <Cmd>BufferPick<CR>
+--nnoremap <silent> <A-s-/>    <Cmd>BufferPickDelete<CR>
+--]])
+--return barbar
+--end)
 
 local lualine = nil
 local lualine_cfg = nil
@@ -138,30 +148,30 @@ notify_on_error("LSP", function()
 		ensure_installed = { "lua_ls" },
 	})
 
-	require("lazydev").setup({
-		library = {
-			-- See the configuration section for more details
-			-- Load luvit types when the `vim.uv` word is found
-			{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-		},
-	})
+	--require("lazydev").setup({
+	--library = {
+	---- See the configuration section for more details
+	---- Load luvit types when the `vim.uv` word is found
+	--{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+	--},
+	--})
 
 	local blink = package.loaded["blink.cmp"]
 	if not blink then
 		blink = require("blink.cmp")
 		blink.setup({
 			signature = { enabled = true },
-			sources = {
-				default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-				providers = {
-					lazydev = {
-						name = "LazyDev",
-						module = "lazydev.integrations.blink",
-						-- make lazydev completions top priority (see `:h blink.cmp`)
-						score_offset = 100,
-					},
-				},
-			},
+			--sources = {
+			--default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+			--providers = {
+			--lazydev = {
+			--name = "LazyDev",
+			--module = "lazydev.integrations.blink",
+			---- make lazydev completions top priority (see `:h blink.cmp`)
+			--score_offset = 100,
+			--},
+			--},
+			--},
 		})
 	end
 
@@ -192,6 +202,7 @@ notify_on_error("LSP", function()
 	lspconfig.ts_ls.setup({})
 	lspconfig.cssls.setup({
 		capabilities = blink.get_lsp_capabilities({}, true),
+    filetypes =   {"html", "css", "scss", "less" }
 	})
 	require("workspace-diagnostics").setup()
 end)
@@ -205,6 +216,7 @@ conform.setup({
 		javascript = { "prettierd", "prettier", stop_after_first = true }, -- install `prettier` with Mason
 		typescript = { "prettierd", "prettier", stop_after_first = true },
 		css = { "prettierd", "prettier", stop_after_first = true },
+		html = { "prettierd", "prettier", stop_after_first = true },
 		lua = { "stylua" },
 	},
 	format_on_save = {
@@ -232,6 +244,10 @@ local function oil_copy_path_to_register()
 	vim.fn.setreg(vim.v.register, path)
 	vim.notify('Copied to "' .. vim.v.register .. ": " .. path)
 end
+local function oil_add_file_to_buffer_list()
+	local path = oil.get_current_dir() .. oil.get_cursor_entry().name
+	vim.cmd("badd " .. path)
+end
 local function oil_open_shortcuts()
 	vim.cmd("silent wall")
 
@@ -258,6 +274,7 @@ require("oil").setup({
 	keymaps = {
 		["<Esc>"] = "actions.close",
 		["<C-c>"] = { oil_copy_path_to_register, desc = "[my] copy path to register" },
+		["<S-CR>"] = { oil_add_file_to_buffer_list, desc = "[my] add file to buffer list (:badd)" },
 		["<F1>"] = { oil_open_shortcuts, desc = "[my] open shortcuts buffer (drips.oil)" },
 		["<F2>"] = {
 			function()
@@ -346,7 +363,7 @@ vim.cmd('map <S-F8> :wall<CR>:!powershell -command "Start-Process neovide.exe %"
 vim.cmd('map <A-F8> "lyy:lua <C-r>l<CR>')
 -- <C-F8> for project-specific re-soure
 
-vim.keymap.set("n", "<S-F12>", colorschemes.switch)
+vim.keymap.set("n", "<A-F12>", require("colorschemes").switch)
 
 ---=== greeter ===---
 
