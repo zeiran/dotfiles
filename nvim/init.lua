@@ -177,37 +177,65 @@ notify_on_error("LSP", function()
 
 	--vim.uv.os_setenv('VIMRUNTIME', vim.env.VIMRUNTIME) -- used in `.luarc.json` to find vim runtime definitions, assuming that LSP server starts as child process of Vim
 
-	local lspconfig = require("lspconfig")
-	lspconfig.lua_ls.setup({
-		capabilities = blink.get_lsp_capabilities({}, true),
-		--settings = {
-		--Lua = { --defaults for vim-related scripts, other projects should use `.luarc.json` file
-		--runtime = { version = 'LuaJIT' },
-		--workspace = {
-		--checkThirdParty = false,
-		----ignoreSubmodules = false,
-		----library = { vim.env.VIMRUNTIME, "${3rd}/luv/library" }
-		--library = vim.list_extend({ "${3rd}/luv/library" }, vim.api.nvim_get_runtime_file("", true))
-		--}
-		--}
-		--}
+	vim.lsp.enable("lua_ls")
+
+	-- Typescript / Vue
+
+	local vue_language_server_path = vim.fn.stdpath("data")
+		.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+	vim.lsp.config("ts_ls", {
+		init_options = {
+			plugins = {
+				{
+					name = "@vue/typescript-plugin",
+					location = vue_language_server_path,
+					languages = { "vue" },
+				},
+			},
+		},
+		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 	})
-	lspconfig.clangd.setup({
-		capabilities = blink.get_lsp_capabilities({}, true),
-		cmd = { "clangd", "--completion-style=detailed", "--background-index" },
-	})
-	lspconfig.cmake.setup({
-		capabilities = blink.get_lsp_capabilities({}, true),
-	})
-	lspconfig.ts_ls.setup({})
-	lspconfig.cssls.setup({
-		capabilities = blink.get_lsp_capabilities({}, true),
-    filetypes =   {"html", "css", "scss", "less" }
-	})
+	vim.lsp.enable("ts_ls")
+	vim.lsp.enable("vue_ls")
+	vim.lsp.enable("cssls")
+
+	--local lspconfig = require("lspconfig")
+	--lspconfig.lua_ls.setup({
+	--capabilities = blink.get_lsp_capabilities({}, true),
+	--})
+	--lspconfig.clangd.setup({
+	--capabilities = blink.get_lsp_capabilities({}, true),
+	--cmd = { "clangd", "--completion-style=detailed", "--background-index" },
+	--})
+	--lspconfig.cmake.setup({
+	--capabilities = blink.get_lsp_capabilities({}, true),
+	--})
+
+	--local mason_registry = require("mason-registry")
+	--local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+	--.. "/node_modules/@vue/language-server"
+
+	--lspconfig.volar.setup({})
+	--lspconfig.ts_ls.setup({
+	--init_options = {
+	--plugins = {
+	--{
+	--name = "@vue/typescript-plugin",
+	--location = vue_language_server_path,
+	--languages = { "vue" },
+	--},
+	--},
+	--},
+	--filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+	--})
+	--lspconfig.cssls.setup({
+	--capabilities = blink.get_lsp_capabilities({}, true),
+	--filetypes = { "html", "css", "scss", "less" },
+	--})
 	require("workspace-diagnostics").setup()
 end)
 
----=== plugins.filesystem ===---
+---=== plugins.formatting ===---
 
 -- use ::ConformInfo for status
 local conform = require("conform")
@@ -215,6 +243,7 @@ conform.setup({
 	formatters_by_ft = {
 		javascript = { "prettierd", "prettier", stop_after_first = true }, -- install `prettier` with Mason
 		typescript = { "prettierd", "prettier", stop_after_first = true },
+		vue = { "prettierd", "prettier", stop_after_first = true },
 		css = { "prettierd", "prettier", stop_after_first = true },
 		html = { "prettierd", "prettier", stop_after_first = true },
 		lua = { "stylua" },
@@ -229,7 +258,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local bufnr = args.buf
 		local formatters = #require("conform").list_formatters_to_run()
 		if formatters ~= 0 then
-			vim.notify("Using `conform` for buffer " .. bufnr .. "...")
+			-- vim.notify("Using `conform` for buffer " .. bufnr .. "...")
 			vim.bo[bufnr].formatexpr = "v:lua.require'conform'.formatexpr()"
 		end
 	end,
@@ -342,6 +371,7 @@ vim.o.splitright = true
 
 ---=== mappings ===---
 vim.keymap.set("n", "<S-CR>", "o<Esc>")
+vim.keymap.set("n", "<Leader>n", ":set number<CR>:set relativenumber<CR>") -- когда опции збились
 
 vim.cmd("imap <Ins> <Esc>")
 vim.cmd("tmap <Esc> <C-\\><C-n>")

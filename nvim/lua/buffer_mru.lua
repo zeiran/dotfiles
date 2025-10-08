@@ -17,11 +17,11 @@ local function format_buf_line(i, bufnr)
 		s = s .. "  " .. letter
 		vim.keymap.set("n", "<A-" .. letter .. ">", ":" .. bufnr .. "b<CR>")
 	end
-  local found, hotkey = pcall(vim.api.nvim_buf_get_var, bufnr, 'buf_mru_key')
-  if found then
-    s = s..' '..hotkey
+	local found, hotkey = pcall(vim.api.nvim_buf_get_var, bufnr, "buf_mru_key")
+	if found then
+		s = s .. " " .. hotkey
 		vim.keymap.set("n", "<A-" .. hotkey .. ">", ":" .. bufnr .. "b<CR>")
-  end
+	end
 	return s
 end
 
@@ -68,6 +68,7 @@ local function format_buf_lines(enteredBuffer)
 end
 
 local bufnr
+local group_name = "buffer-mru"
 
 --print(vim.inspect(bufs))
 local function toggle_buffer_mru_win()
@@ -77,6 +78,19 @@ local function toggle_buffer_mru_win()
 		vim.api.nvim_buf_set_name(bufnr, "[buffer-mru]")
 		vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, format_buf_lines())
 		vim.g.zr_bufnr = bufnr
+		vim.api.nvim_create_autocmd({ "WinEnter" }, {
+			group = group_name,
+			buffer = bufnr,
+			callback = function()
+				local bufs = vim.fn.tabpagebuflist()
+				if #bufs == 1 then
+					vim.schedule(function()
+						vim.cmd("vnew .")
+						vim.api.nvim_win_set_width(vim.g.zr_winnr, len + 6)
+					end)
+				end
+			end,
+		})
 	end
 	local winnr = vim.g.zr_winnr
 
@@ -93,6 +107,7 @@ local function toggle_buffer_mru_win()
 		vim.api.nvim_set_option_value("number", false, { win = winnr })
 		vim.api.nvim_set_option_value("relativenumber", false, { win = winnr })
 		vim.api.nvim_set_option_value("winfixwidth", true, { win = winnr })
+		vim.api.nvim_set_option_value("winfixbuf", true, { win = winnr })
 		vim.fn.win_execute(winnr, 'syn match Ignore ".*[\\\\/]"')
 		vim.fn.win_execute(winnr, 'syn match Tag "  \\d\\+"')
 		--print(bufnr)
@@ -101,7 +116,6 @@ end
 
 vim.keymap.set("n", "<A-=>", toggle_buffer_mru_win, { desc = "[buf-mru] toggle MRU buffer window" })
 
-local group_name = "buffer-mru"
 vim.api.nvim_create_augroup(group_name, { clear = true })
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	group = group_name,

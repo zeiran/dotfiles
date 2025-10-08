@@ -5,7 +5,12 @@ local schemes = {}
 local lualine = nil
 local lualine_cfg = {}
 
-require("everforest").setup({background = "hard"})
+require("everforest").setup({
+  background = "hard",
+  colours_override = function (palette)
+    palette.bg0 = "#20282b" -- default is "#272e33"
+  end
+})
 
 local function set()
     local scheme = schemes[vim.g.MY_COLOR_INDEX]
