@@ -1,0 +1,9 @@
+= KITTY =                  = MC =
+[C-S-F1] html help         [A-Enter] name to cmdline
+[C-S-t]  tab new           [S-Enter] full path to cmdline (custom)
+[C-S-q]  tab close         [A-t]     change list style 
+[C-S-h]  history to less   [A-i]     cd other panel
+[C-S-g]  last cmd to less  [C-PgUp]  parent dir
+                           [A-s]     quick search
+                           [A-S-h]   dir history
+
