@@ -30,3 +30,19 @@ require('lualine').setup({
 		lualine_z = {'progress', 'location'}
 	}
 })
+
+-- Telescope
+
+-- sudo apt install ripgrep
+-- sudo apt install fd-find
+-- TODO install telescope-fzf-native.nvim or telescope-fzy-native.nvim ?
+vim.pack.add({
+	'https://github.com/nvim-lua/plenary.nvim',
+    'https://github.com/nvim-tree/nvim-web-devicons',
+	'https://github.com/nvim-telescope/telescope.nvim'
+})
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<F2>', builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<F3>', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<F1>', builtin.buffers, { desc = 'Telescope buffers' })
+
