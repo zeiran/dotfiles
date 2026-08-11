@@ -1,2 +1,2 @@
 [filemanager]
-PutCurrentFullSelected = shift-enter
+PutCurrentFullSelected = ctrl-f; shift-enter
