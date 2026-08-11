@@ -10,14 +10,14 @@ vim.cmd("colorscheme catppuccin")
 vim.o.shiftwidth=4
 vim.o.tabstop=4
 
--- Leap
+---- Leap
 
 vim.pack.add { 'https://codeberg.org/andyg/leap.nvim' }
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
 vim.keymap.set({ 'x', 'o' },      'x', '<Plug>(leap-next-to)')
 vim.keymap.set({ 'n' },           'S', '<Plug>(leap-from-window)')
 
--- Lualine
+---- Lualine
 
 vim.pack.add({
     'https://github.com/nvim-tree/nvim-web-devicons',
@@ -31,7 +31,7 @@ require('lualine').setup({
 	}
 })
 
--- Telescope
+---- Telescope
 
 -- sudo apt install ripgrep
 -- sudo apt install fd-find
@@ -45,4 +45,26 @@ local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<F2>', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<F3>', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<F1>', builtin.buffers, { desc = 'Telescope buffers' })
+
+---- Mason
+
+-- in Mason, install clang-format
+vim.pack.add({
+	'https://github.com/mason-org/mason.nvim'
+})
+require("mason").setup()
+
+---- Conform (formatting)
+
+vim.pack.add({
+	'https://github.com/stevearc/conform.nvim'
+})
+require("conform").setup({
+  formatters_by_ft = {
+    cpp = { "clang-format" }
+  },
+  format_on_save = {
+    timeout_ms = 500,
+  },
+})
 
