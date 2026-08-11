@@ -48,7 +48,7 @@ vim.keymap.set('n', '<F1>', builtin.buffers, { desc = 'Telescope buffers' })
 
 ---- Mason
 
--- in Mason, install clang-format
+-- in Mason, install clang-format, clangd
 vim.pack.add({
 	'https://github.com/mason-org/mason.nvim'
 })
@@ -67,4 +67,30 @@ require("conform").setup({
     timeout_ms = 500,
   },
 })
+
+--- LSP configs
+
+-- symlink your compile_commands.json to project root
+
+vim.pack.add({
+	'https://github.com/neovim/nvim-lspconfig'
+})
+vim.lsp.enable('clangd')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
