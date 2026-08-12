@@ -16,6 +16,14 @@ vim.o.shiftwidth=4
 vim.o.tabstop=4
 vim.o.hlsearch=false
 
+---- Colorscheme
+
+vim.pack.add { "https://github.com/neanias/everforest-nvim" }
+require("everforest").setup({
+	background = "hard"
+})
+vim.cmd([[colorscheme everforest]])
+
 ---- Dynamic font 
 
 -- maps ctrl++, ctl+-, ctrl-shift-=
@@ -42,6 +50,9 @@ require('lualine').setup({
 		lualine_x = {'getcwd'},
 		lualine_y = {'filetype', 'encoding'},
 		lualine_z = {'progress', 'location'}
+	},
+	options = {
+		theme = "auto"
 	}
 })
 
@@ -108,6 +119,15 @@ vim.pack.add({
 local cmp = require('blink.cmp')
 --cmp.build():pwait() -- it's for v2
 cmp.setup()
+
+--- Oil
+
+vim.pack.add({
+    'https://github.com/stevearc/oil.nvim',
+})
+local oil = require("oil")
+oil.setup()
+vim.keymap.set('n', '<F4>', oil.open, { desc = 'Open file dir' })
 
 
 
