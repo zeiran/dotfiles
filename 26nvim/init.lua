@@ -1,14 +1,20 @@
 if vim.g.neovide then
 	vim.o.guifont = "Fira Code:h11"
-	vim.g.neovide_padding_top = 0
-	vim.g.neovide_padding_bottom = 0
-	vim.g.neovide_padding_right = 5
-	vim.g.neovide_padding_left = 5
+	vim.g.neovide_padding_top = 5
+	vim.g.neovide_padding_bottom = 5
+	vim.g.neovide_padding_right = 10
+	vim.g.neovide_padding_left = 10
+
+	vim.g.neovide_fullscreen = true
+	vim.g.neovide_cursor_vfx_mode = "railgun"
+	vim.g.neovide_cursor_vfx_particle_lifetime = 0.5
+	vim.g.neovide_cursor_vfx_particle_highlight_lifetime = 0.2
 end
 
 vim.cmd("colorscheme catppuccin")
 vim.o.shiftwidth=4
 vim.o.tabstop=4
+vim.o.hlsearch=false
 
 ---- Dynamic font 
 
@@ -87,6 +93,11 @@ vim.lsp.enable('clangd')
 
 vim.keymap.set('n', '<F5>', vim.diagnostic.open_float, { desc = 'LSP diagnostics open float' })
 vim.keymap.set('n', '<S-F5>', vim.diagnostic.setqflist, { desc = 'LSP diagnostics to quickfix' })
+
+vim.keymap.set('n', '<S-F3>', function() 
+	builtin.lsp_dynamic_workspace_symbols({symbols = {'struct', 'class'}})
+end, { desc = 'Telescope LSP types' })
+
 
 --- Blink completion
 
