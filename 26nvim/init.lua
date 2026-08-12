@@ -10,6 +10,14 @@ vim.cmd("colorscheme catppuccin")
 vim.o.shiftwidth=4
 vim.o.tabstop=4
 
+---- Dynamic font 
+
+-- maps ctrl++, ctl+-, ctrl-shift-=
+vim.pack.add({
+	'https://github.com/tenxsoydev/size-matters.nvim'
+})
+require("size-matters").setup()
+
 ---- Leap
 
 vim.pack.add { 'https://codeberg.org/andyg/leap.nvim' }
@@ -77,7 +85,18 @@ vim.pack.add({
 })
 vim.lsp.enable('clangd')
 
+vim.keymap.set('n', '<F5>', vim.diagnostic.open_float, { desc = 'LSP diagnostics open float' })
+vim.keymap.set('n', '<S-F5>', vim.diagnostic.setqflist, { desc = 'LSP diagnostics to quickfix' })
 
+--- Blink completion
+
+vim.pack.add({ 
+	'https://github.com/saghen/blink.lib', 
+	{src='https://github.com/saghen/blink.cmp', version="v1.10.2"} 
+})
+local cmp = require('blink.cmp')
+--cmp.build():pwait() -- it's for v2
+cmp.setup()
 
 
 
