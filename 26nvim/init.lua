@@ -1,3 +1,8 @@
+
+local user = os.getenv('LOGNAME')
+local kl = (user == 'alexeev_ev@avp.ru')
+print('USER=' .. user .. ', KL=' .. tostring(kl))
+
 if vim.g.neovide then
 	vim.o.guifont = "Fira Code:h11"
 	vim.g.neovide_padding_top = 5
@@ -71,6 +76,16 @@ vim.keymap.set('n', '<F2>', builtin.find_files, { desc = 'Telescope find files' 
 vim.keymap.set('n', '<F3>', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<F1>', builtin.buffers, { desc = 'Telescope buffers' })
 
+vim.pack.add({
+	'https://github.com/natecraddock/telescope-zf-native.nvim'
+})
+require("telescope").load_extension("zf-native")
+
+vim.pack.add({
+	'https://github.com/nvim-telescope/telescope-ui-select.nvim'
+})
+require("telescope").load_extension("ui-select")
+
 ---- Mason
 
 -- in Mason, install clang-format, clangd
@@ -84,9 +99,16 @@ require("mason").setup()
 vim.pack.add({
 	'https://github.com/stevearc/conform.nvim'
 })
+local formatter = 'clang-format'
+if kl then formatter = 'clang-format-18' end
 require("conform").setup({
   formatters_by_ft = {
     cpp = { "clang-format" }
+  },
+  formatters = {
+  	["clang-format"] = {
+	  command = formatter	
+	}
   },
   format_on_save = {
     timeout_ms = 500,
@@ -129,7 +151,12 @@ local oil = require("oil")
 oil.setup()
 vim.keymap.set('n', '<F4>', oil.open, { desc = 'Open file dir' })
 
+---- CMake
 
+vim.pack.add({
+	'https://github.com/Civitasv/cmake-tools.nvim'
+})
+require("cmake-tools").setup({})
 
 
 
