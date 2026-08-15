@@ -71,10 +71,17 @@ vim.pack.add({
     'https://github.com/nvim-tree/nvim-web-devicons',
 	'https://github.com/nvim-telescope/telescope.nvim'
 })
+
+require('telescope').setup{
+	defaults = {
+		layout_strategy = 'vertical',
+		layout_config = { height = 0.99 },
+	}
+}
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<F2>', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<F3>', builtin.live_grep, { desc = 'Telescope live grep' })
-vim.keymap.set('n', '<F1>', builtin.buffers, { desc = 'Telescope buffers' })
+vim.keymap.set('n', '<F1>', function() builtin.buffers({sort_mru=true, ignore_current_buffer=true}) end, { desc = 'Telescope buffers' })
 
 vim.pack.add({
 	'https://github.com/natecraddock/telescope-zf-native.nvim'
@@ -161,6 +168,7 @@ require("cmake-tools").setup({})
 vim.keymap.set('n', '<F7>', ":CMakeBuild<CR>", { desc = 'CMake build' })
 vim.keymap.set('n', '<C-F7>', ":CMakeSelectBuildTarget<CR>", { desc = 'Cmake select build target' })
 vim.keymap.set('n', '<S-F7>', ":CMakeQuickBuild<CR>", { desc = 'Cmake quick build' })
+
 
 
 
