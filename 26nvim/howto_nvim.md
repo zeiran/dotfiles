@@ -16,3 +16,8 @@ export XDG_CONFIG_HOME="$HOME/.config/"
 export XDG_STATE_HOME="$HOME/.local/state/"
 export XDG_CACHE_HOME="$HOME/.cache/"
 ```
+
+А потом похожие ошибки стали вылезать в cmake-tools, поэтому я просто сделал симлинк
+```
+sudo ln -s /home/alexeev_ev /home/alexeev_ev@avp.ru
+```

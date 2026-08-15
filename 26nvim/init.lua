@@ -158,6 +158,9 @@ vim.pack.add({
 })
 require("cmake-tools").setup({})
 
+vim.keymap.set('n', '<F7>', ":CMakeBuild<CR>", { desc = 'CMake build' })
+vim.keymap.set('n', '<C-F7>', ":CMakeSelectBuildTarget<CR>", { desc = 'Cmake select build target' })
+vim.keymap.set('n', '<S-F7>', ":CMakeQuickBuild<CR>", { desc = 'Cmake quick build' })
 
 
 
