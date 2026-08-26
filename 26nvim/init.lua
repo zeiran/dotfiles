@@ -163,11 +163,21 @@ vim.keymap.set('n', '<F4>', oil.open, { desc = 'Open file dir' })
 vim.pack.add({
 	'https://github.com/Civitasv/cmake-tools.nvim'
 })
-require("cmake-tools").setup({})
+require("cmake-tools").setup({
+	cmake_regenerate_on_save=false,
+	cmake_executor = {
+		name = "quickfix",
+		opts = {size=30}, 
+	}
+})
 
 vim.keymap.set('n', '<F7>', ":CMakeBuild<CR>", { desc = 'CMake build' })
 vim.keymap.set('n', '<C-F7>', ":CMakeSelectBuildTarget<CR>", { desc = 'Cmake select build target' })
 vim.keymap.set('n', '<S-F7>', ":CMakeQuickBuild<CR>", { desc = 'Cmake quick build' })
+
+vim.keymap.set('n', '<F8>', ":CMakeRun<CR>", { desc = 'CMake run' })
+vim.keymap.set('n', '<C-F8>', ":CMakeSelectLaunchTarget<CR>", { desc = 'Cmake select launch target' })
+vim.keymap.set('n', '<S-F8>', ":CMakeQuickRun<CR>", { desc = 'Cmake quick run' })
 
 
 
